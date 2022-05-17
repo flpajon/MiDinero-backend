@@ -22,10 +22,11 @@ public class WebConfigurations extends WebSecurityConfigurerAdapter {
 
 	private static final String rolAdmin = "ROLE_ADMIN";
 	private static final String rolNormal = "ROLE_NORMAL";
-	
+
 	private static final String[] endpoints_ADMIN = new String[] { "/v1/user/*" };
-	private static final String[] endpoints_NORMAL = new String[] {"/v1/movement-type/*", "/v1/movement/*"};
-	private static final String[] endpoints_PUBLIC = new String[] {"/v1/auth/*","/swagger-ui/*", "/v3/api-docs/*", "/v3/api-docs"};
+	private static final String[] endpoints_NORMAL = new String[] { "/v1/movement-type/*", "/v1/movement/*" };
+	private static final String[] endpoints_PUBLIC = new String[] { "/v1/auth/*", "/swagger-ui/*", "/v3/api-docs/*",
+			"/v3/api-docs" };
 
 	@Autowired
 	JwtEntryPoint jwtEntryPoint;
@@ -39,7 +40,7 @@ public class WebConfigurations extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().authorizeRequests().antMatchers(endpoints_PUBLIC).permitAll()

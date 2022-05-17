@@ -37,7 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 					new UserDTO(user.getUserId(), user.getUserName(), roleDTO, user.getUserIsActive(), personDTO));
 			return authenticationResponse;
 		}
-		return new AuthenticationResponse(new StateDTO(1,"Wrong username or password"));
+		return new AuthenticationResponse(new StateDTO(1,"Wrong user or password"));
 	}
 
 }

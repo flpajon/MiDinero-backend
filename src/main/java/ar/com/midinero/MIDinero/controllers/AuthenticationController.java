@@ -25,14 +25,13 @@ public class AuthenticationController {
 	AuthenticationService authenticationService;
 
 	@RequestMapping(method = RequestMethod.POST, value = "/login")
-	public ResponseEntity<AuthenticationResponse> userLogIn(@RequestBody AuthenticationRequest userLogIn) {
+	public ResponseEntity<?> userLogIn(@RequestBody AuthenticationRequest userLogIn) {
 		try {
 			return new ResponseEntity<AuthenticationResponse>(authenticationService.userLogIn(userLogIn),
 					HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.toString());
-			return new ResponseEntity<AuthenticationResponse>(
-					new AuthenticationResponse(new StateDTO(500, "Server problems")), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<StateDTO>(new StateDTO(500, "Server problems."), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
