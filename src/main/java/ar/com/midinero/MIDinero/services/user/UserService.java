@@ -15,7 +15,9 @@ public interface UserService {
 	public DesactivateUserResponseDTO desactivateUser(DesactivateUserRequestDTO user);
 	public ActivateUserResponseDTO activateUser(ActivateUserRequestDTO user);
 	public UserListResponseDTO getUsers();
-	public Boolean validateUserNameAndUserPassword(String userName, String password);
+	public Boolean validateUserNameAndUserPasswordAndUserIsActive(String userName, String password);
 	public User getUserFromUserName(String userName);
 	public User getUserFromUserId(Long userId);
+	public Boolean validateUserNameAndUserIsNotActive(String userName);
+	public Boolean validateUserNameAndUserIsActive(String userName);
 }

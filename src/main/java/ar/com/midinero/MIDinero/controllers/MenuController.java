@@ -7,25 +7,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.midinero.MIDinero.controllers.dto.commons.StateDTO;
-import ar.com.midinero.MIDinero.controllers.dto.movementtype.MovementTypeListResponseDTO;
-import ar.com.midinero.MIDinero.services.movementtype.MovementTypeService;
+import ar.com.midinero.MIDinero.controllers.dto.menu.MenuListResponseDTO;
+import ar.com.midinero.MIDinero.services.role.RoleService;
 
 @RestController
-@RequestMapping(value = "v1/movement-type")
-public class MovementTypeController {
+@RequestMapping(value = "v1/menu")
+public class MenuController {
 
-	private final static Logger logger = LoggerFactory.getLogger(MovementTypeController.class);
+	private final static Logger logger = LoggerFactory.getLogger(MenuController.class);
 
 	@Autowired
-	MovementTypeService movementTypeService;
+	RoleService roleService;
 
-	@GetMapping(value = "/list")
-	public ResponseEntity<?> getMovementTypes() {
+	@GetMapping(params = { "roleName" })
+	public ResponseEntity<?> getMenuListFromRoleName(@RequestParam(name = "roleName") String roleName) {
 		try {
-			return new ResponseEntity<MovementTypeListResponseDTO>(movementTypeService.getMovementTypes(),
+			return new ResponseEntity<MenuListResponseDTO>(roleService.getMenuListFromRoleName(roleName),
 					HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.toString());

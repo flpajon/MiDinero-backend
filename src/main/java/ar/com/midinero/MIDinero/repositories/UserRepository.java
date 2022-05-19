@@ -10,9 +10,10 @@ import ar.com.midinero.MIDinero.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	Boolean existsByUserNameIgnoreCaseOrUserPersonPersonEmail(String userName, String personEmail);
-	User findByUserName(String username);
-	Boolean existsByUserNameIgnoreCase(String userName);
+	Boolean existsByUserNameIgnoreCaseOrUserPersonPersonEmailIgnoreCase(String userName, String personEmail);
+	User findByUserNameIgnoreCase(String username);
+	Boolean existsByUserNameIgnoreCaseAndUserIsActiveTrue(String userName);
 	List<User> findAllByUserRoleRoleName(String roleName);
+	Boolean existsByUserNameIgnoreCaseAndUserIsActiveFalse(String userName);
 
 }

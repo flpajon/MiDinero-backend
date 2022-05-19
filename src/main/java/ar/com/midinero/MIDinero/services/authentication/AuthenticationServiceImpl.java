@@ -24,7 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	public AuthenticationResponse userLogIn(AuthenticationRequest authenticationRequest) {
-		if (userService.validateUserNameAndUserPassword(authenticationRequest.getUserName(),
+		if (userService.validateUserNameAndUserPasswordAndUserIsActive(authenticationRequest.getUserName(),
 				authenticationRequest.getPassword())) {
 			String jwt = jwtProvider.generateToken(authenticationRequest.getUserName());
 			AuthenticationResponse authenticationResponse = new AuthenticationResponse(
@@ -37,7 +37,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 					new UserDTO(user.getUserId(), user.getUserName(), roleDTO, user.getUserIsActive(), personDTO));
 			return authenticationResponse;
 		}
-		return new AuthenticationResponse(new StateDTO(1,"Wrong user or password"));
+		if(userService.validateUserNameAndUserIsNotActive(authenticationRequest.getUserName())) {
+			return new AuthenticationResponse(new StateDTO(1,"User not activated."));
+		}
+		return new AuthenticationResponse(new StateDTO(1,"Wrong user or password."));
 	}
 
 }

@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ActivateUserRequestDTO {
-	private UserDTO user;
+	private Long userId;
 }

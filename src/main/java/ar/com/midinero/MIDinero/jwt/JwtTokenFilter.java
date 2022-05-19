@@ -16,34 +16,41 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import ar.com.midinero.MIDinero.services.user.UserService;
+
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 	private final static Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
 
 	@Autowired
 	JwtProvider jwtProvider;
-	
+
 	@Autowired
 	UserDetailsService userDetailsService;
-	
+
+	@Autowired
+	UserService userService;
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		try {
 			String token = getToken(request);
 			if (token != null && jwtProvider.validateToken(token)) {
-				String nombreUsuario = jwtProvider.getUserNameFromToken(token);
-				UserDetails userDetails = userDetailsService.loadUserByUsername(nombreUsuario);
-				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null,
-						userDetails.getAuthorities());
-				SecurityContextHolder.getContext().setAuthentication(auth);
+				String userName = jwtProvider.getUserNameFromToken(token);
+				if (userService.validateUserNameAndUserIsActive(userName)) {
+					UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+					UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
+							null, userDetails.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(auth);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("doFilterInternal method failed");
 		}
 		filterChain.doFilter(request, response);
 	}
-	
+
 	private String getToken(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
 		if (header != null && header.startsWith("Bearer")) {

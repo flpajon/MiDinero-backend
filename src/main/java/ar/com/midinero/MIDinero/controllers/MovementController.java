@@ -1,7 +1,5 @@
 package ar.com.midinero.MIDinero.controllers;
 
-import java.util.ArrayList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,54 +30,48 @@ public class MovementController {
 	MovementService movementService;
 
 	@GetMapping(value = "/list", params = { "userId" })
-	public ResponseEntity<MovementListResponseDTO> getUserMovements(@RequestParam(name = "userId") Long userId) {
+	public ResponseEntity<?> getUserMovements(@RequestParam(name = "userId") Long userId) {
 		try {
 			return new ResponseEntity<MovementListResponseDTO>(movementService.getMovements(userId), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.toString());
-			return new ResponseEntity<MovementListResponseDTO>(
-					new MovementListResponseDTO(new StateDTO(500, "Server problems."), new ArrayList<>()),
+			return new ResponseEntity<StateDTO>(new StateDTO(500, "Server problems."),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping(value = "/accountState", params = { "userId", "filter" })
-	public ResponseEntity<MovementAccountResponseDTO> getUserMovementCountFromFilter(
-			@RequestParam(name = "userId") Long userId, @RequestParam(name = "filter") String filter) {
+	public ResponseEntity<?> getUserMovementCountFromFilter(@RequestParam(name = "userId") Long userId,
+			@RequestParam(name = "filter") String filter) {
 		try {
 			return new ResponseEntity<MovementAccountResponseDTO>(movementService.getMovementCount(userId, filter),
 					HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.toString());
-			return new ResponseEntity<MovementAccountResponseDTO>(
-					new MovementAccountResponseDTO(new StateDTO(500, "Server problems."), new ArrayList<>()),
+			return new ResponseEntity<StateDTO>(new StateDTO(500, "Server problems."),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@GetMapping(value = "/currentAccountState", params = { "userId" })
-	public ResponseEntity<MovementsAccountStatusResponseDTO> getUserMovementAccountStatus(
-			@RequestParam(name = "userId") Long userId) {
+	public ResponseEntity<?> getUserMovementAccountStatus(@RequestParam(name = "userId") Long userId) {
 		try {
-			return new ResponseEntity<MovementsAccountStatusResponseDTO>(movementService.getCurrentAccountStatement(userId),
-					HttpStatus.OK);
+			return new ResponseEntity<MovementsAccountStatusResponseDTO>(
+					movementService.getCurrentAccountStatement(userId), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.toString());
-			return new ResponseEntity<MovementsAccountStatusResponseDTO>(
-					new MovementsAccountStatusResponseDTO(new StateDTO(500, "Server problems."), "0"),
+			return new ResponseEntity<StateDTO>(new StateDTO(500, "Server problems."),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-
 	@PostMapping(value = "/new")
-	public ResponseEntity<NewMovementResponseDTO> newMovement(@RequestBody NewMovementRequestDTO newMovement) {
+	public ResponseEntity<?> newMovement(@RequestBody NewMovementRequestDTO newMovement) {
 		try {
 			return new ResponseEntity<NewMovementResponseDTO>(movementService.newMovement(newMovement), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.toString());
-			return new ResponseEntity<NewMovementResponseDTO>(
-					new NewMovementResponseDTO(new StateDTO(500, "Server problems.")),
+			return new ResponseEntity<StateDTO>(new StateDTO(500, "Server problems."),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -28,7 +28,7 @@ import ar.com.midinero.MIDinero.repositories.UserRepository;
 import ar.com.midinero.MIDinero.services.role.RoleService;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public NewUserResponseDTO createNewUser(NewUserRequestDTO newUser) {
-		if (!userRepository.existsByUserNameIgnoreCaseOrUserPersonPersonEmail(newUser.getUserName(),
+		if (!userRepository.existsByUserNameIgnoreCaseOrUserPersonPersonEmailIgnoreCase(newUser.getUserName(),
 				newUser.getPersonEmail())) {
 			Role role = roleService.getRoleByRoleName(Constants.ROLE_NORMAL);
 			Person newPerson = new Person(newUser.getPersonEmail(), newUser.getPersonName(),
@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public DesactivateUserResponseDTO desactivateUser(DesactivateUserRequestDTO user) {
-		if (userRepository.existsById(user.getUser().getUserId())) {
-			User userTemp = userRepository.findById(user.getUser().getUserId()).get();
+		if (userRepository.existsById(user.getUserId())) {
+			User userTemp = userRepository.findById(user.getUserId()).get();
 			if (userTemp.getUserIsActive()) {
 				userTemp.setUserIsActive(false);
 				userRepository.save(userTemp);
@@ -70,8 +70,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public ActivateUserResponseDTO activateUser(ActivateUserRequestDTO user) {
-		if (userRepository.existsById(user.getUser().getUserId())) {
-			User userTemp = userRepository.findById(user.getUser().getUserId()).get();
+		if (userRepository.existsById(user.getUserId())) {
+			User userTemp = userRepository.findById(user.getUserId()).get();
 			if (!userTemp.getUserIsActive()) {
 				userTemp.setUserIsActive(true);
 				userRepository.save(userTemp);
@@ -90,17 +90,16 @@ public class UserServiceImpl implements UserService{
 				PersonDTO personDTO = new PersonDTO(user.getUserPerson().getPersonEmail(),
 						user.getUserPerson().getPersonName(), user.getUserPerson().getPersonSurname());
 				RoleDTO roleDTO = new RoleDTO(user.getUserRole().getRoleId(), user.getUserRole().getRoleName());
-				return new UserDTO(user.getUserId(), user.getUserName(), roleDTO,
-						user.getUserIsActive(), personDTO);
+				return new UserDTO(user.getUserId(), user.getUserName(), roleDTO, user.getUserIsActive(), personDTO);
 			}).collect(Collectors.toList()));
 		}
 		return new UserListResponseDTO(new StateDTO(1, "Empty user list"), new ArrayList<UserDTO>());
 	}
 
 	@Override
-	public Boolean validateUserNameAndUserPassword(String userName, String password) {
-		if(userRepository.existsByUserNameIgnoreCase(userName)){
-			User userTemp = userRepository.findByUserName(userName);
+	public Boolean validateUserNameAndUserPasswordAndUserIsActive(String userName, String password) {
+		if (userRepository.existsByUserNameIgnoreCaseAndUserIsActiveTrue(userName)) {
+			User userTemp = userRepository.findByUserNameIgnoreCase(userName);
 			return passwordEncoder.matches(password, userTemp.getUserPassword());
 		}
 		return false;
@@ -108,11 +107,22 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User getUserFromUserName(String userName) {
-		return userRepository.findByUserName(userName);
+		return userRepository.findByUserNameIgnoreCase(userName);
 	}
 
 	@Override
 	public User getUserFromUserId(Long userId) {
 		return userRepository.findById(userId).get();
 	}
+
+	@Override
+	public Boolean validateUserNameAndUserIsNotActive(String userName) {
+		return userRepository.existsByUserNameIgnoreCaseAndUserIsActiveFalse(userName);
+	}
+
+	@Override
+	public Boolean validateUserNameAndUserIsActive(String userName) {
+		return userRepository.existsByUserNameIgnoreCaseAndUserIsActiveTrue(userName);
+	}
+
 }
