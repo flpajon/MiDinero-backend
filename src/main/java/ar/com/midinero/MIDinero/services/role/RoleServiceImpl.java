@@ -1,6 +1,7 @@
 package ar.com.midinero.MIDinero.services.role;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +29,10 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public MenuListResponseDTO getMenuListFromRoleName(String roleName) {
 		List<Menu> menuList = roleRepository.getByRoleName(roleName).getRoleMenuList();
+		Collections.sort(menuList, (o1, o2) -> o1.getMenuOrder().compareTo(o2.getMenuOrder()));
 		if (menuList.size() > 0) {
 			return new MenuListResponseDTO(new StateDTO(0, "Full menu list"), menuList.stream()
-					.map(menu -> new MenuDTO(menu.getMenuName(), menu.getMenuEndpoint())).collect(Collectors.toList()));
+					.map(menu -> new MenuDTO(menu.getMenuName(), menu.getMenuEndpoint(), menu.getMenuOrder())).collect(Collectors.toList()));
 		}
 		return new MenuListResponseDTO(new StateDTO(1, "Empty menu list"), new ArrayList<MenuDTO>());
 	}

@@ -13,4 +13,6 @@ public class MenuDTO {
 	private String menuName;
 	@NonNull
 	private String menuEndpoint;
+	@NonNull
+	private Integer menuOrder;
 }

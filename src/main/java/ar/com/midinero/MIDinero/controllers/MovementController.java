@@ -29,10 +29,21 @@ public class MovementController {
 	@Autowired
 	MovementService movementService;
 
-	@GetMapping(value = "/list", params = { "userId" })
-	public ResponseEntity<?> getUserMovements(@RequestParam(name = "userId") Long userId) {
+	@GetMapping(value = "/historical-list", params = { "userId" })
+	public ResponseEntity<?> getUserHistoricalMovements(@RequestParam(name = "userId") Long userId) {
 		try {
 			return new ResponseEntity<MovementListResponseDTO>(movementService.getMovements(userId), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.toString());
+			return new ResponseEntity<StateDTO>(new StateDTO(500, "Server problems."),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping(value = "/current-list", params = { "userId" })
+	public ResponseEntity<?> getUserCurrentMovements(@RequestParam(name = "userId") Long userId) {
+		try {
+			return new ResponseEntity<MovementListResponseDTO>(movementService.getCurrentMovements(userId), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.toString());
 			return new ResponseEntity<StateDTO>(new StateDTO(500, "Server problems."),

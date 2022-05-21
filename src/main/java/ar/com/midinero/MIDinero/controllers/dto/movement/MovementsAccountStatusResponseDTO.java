@@ -12,4 +12,6 @@ public class MovementsAccountStatusResponseDTO {
 	private StateDTO stateMovementsAccountStatus;
 	@NonNull
 	private String accountStatus;
+	@NonNull
+	private String accountDate;
 }

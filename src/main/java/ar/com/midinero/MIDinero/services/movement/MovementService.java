@@ -12,5 +12,6 @@ public interface MovementService {
 	NewMovementResponseDTO newMovement(NewMovementRequestDTO newMovement);
 	MovementAccountResponseDTO getMovementCount(Long userId, String filter);
 	MovementsAccountStatusResponseDTO getCurrentAccountStatement(Long userId);
+	MovementListResponseDTO getCurrentMovements(Long userId);
 
 }

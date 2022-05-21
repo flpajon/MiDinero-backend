@@ -29,6 +29,9 @@ public class Menu {
 	@NonNull
 	@Column(name = "menu_endpoint")
 	private String menuEndpoint;
+	@NonNull
+	@Column(name = "menu_order")
+	private Integer menuOrder;
 	@ManyToMany(mappedBy = "roleMenuList")
 	List<Role> menuRoleList;
 }
