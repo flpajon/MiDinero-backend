@@ -35,7 +35,7 @@ public interface MovementRepository extends JpaRepository<Movement, Long> {
 			+ "			INNER JOIN movement_types ON movement_types.movement_type_id = movements.movement_type_movement_type_id "
 			+ "			WHERE movement_user_user_id = ?1 AND NOT movement_types.movement_type_is_positive "
 			+ "			GROUP BY filter_movement" + ")as count_movement "
-			+ "GROUP BY count_movement.filter_movement", nativeQuery = true)
+			+ "GROUP BY count_movement.filter_movement ORDER BY count_movement.filter_movement", nativeQuery = true)
 	List<MovementAccountState> countPositiveAndNegativeMovementsFromUserByYEAR(Long userId);
 
 	@Query(value = "SELECT count_movement.year_movement as year_period_movement,count_movement.month_movement as month_period_movement, sum(count_movement.is_positive) as total_positive_momement, sum(count_movement.is_negative) as total_negative_momement "
@@ -50,7 +50,7 @@ public interface MovementRepository extends JpaRepository<Movement, Long> {
 			+ "			INNER JOIN movement_types ON movement_types.movement_type_id = movements.movement_type_movement_type_id "
 			+ "			WHERE movement_user_user_id = ?1 AND NOT movement_types.movement_type_is_positive "
 			+ "			GROUP BY year_movement, month_movement" + ")as count_movement "
-			+ "GROUP BY count_movement.year_movement, count_movement.month_movement", nativeQuery = true)
+			+ "GROUP BY count_movement.year_movement, count_movement.month_movement ORDER BY count_movement.year_movement, count_movement.month_movement ASC", nativeQuery = true)
 	List<MovementAccountState> countPositiveAndNegativeMovementsFromUserByMONTH(Long userId);
 
 	@Query(value = "SELECT count_movement.year_movement as year_period_movement ,count_movement.month_movement as month_period_movement, count_movement.day_movement as day_period_movement, sum(count_movement.is_positive) as total_positive_momement, sum(count_movement.is_negative) as total_negative_momement "
@@ -65,7 +65,7 @@ public interface MovementRepository extends JpaRepository<Movement, Long> {
 			+ "			INNER JOIN movement_types ON movement_types.movement_type_id = movements.movement_type_movement_type_id "
 			+ "			WHERE movement_user_user_id = ?1 AND NOT movement_types.movement_type_is_positive "
 			+ "			GROUP BY year_movement, month_movement, day_movement" + ")as count_movement "
-			+ "GROUP BY count_movement.year_movement, count_movement.month_movement, count_movement.day_movement", nativeQuery = true)
+			+ "GROUP BY count_movement.year_movement, count_movement.month_movement, count_movement.day_movement ORDER BY count_movement.year_movement, count_movement.month_movement, count_movement.day_movement ASC", nativeQuery = true)
 	List<MovementAccountState> countPositiveAndNegativeMovementsFromUserByDAY(Long userId);
 
 	@Query(value = "SELECT movement_amount,  movement_types.movement_type_is_positive " + "FROM movements "
